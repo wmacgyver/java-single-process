@@ -1,0 +1,53 @@
+plugins {
+    id 'java'
+    id 'groovy'
+    id 'application'
+    id 'idea'
+    id 'net.ltgt.apt' version '0.10'
+    id 'com.github.ben-manes.versions' version '0.15.0'
+    id 'org.springframework.boot' version '1.5.8.RELEASE'
+}
+
+version = '1.0'
+mainClassName = 'com.protec.process.Application'
+
+def compatibilityVersion = 1.8
+sourceCompatibility = compatibilityVersion
+targetCompatibility = compatibilityVersion
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+configurations {
+    apt
+}
+
+dependencies {
+    def lombokVersion = '1.16.18'
+    def slf4jVersion = '1.7.25'
+    def retrofitVersion = '2.3.0'
+
+    compileOnly "org.projectlombok:lombok:$lombokVersion"
+    apt "org.projectlombok:lombok:$lombokVersion"
+
+    compile 'org.springframework.boot:spring-boot-starter'
+    compile 'org.springframework.boot:spring-boot-devtools'
+
+    compile 'redis.clients:jedis:2.9.0'
+    compile 'com.google.guava:guava:23.1-jre'
+    compile "org.slf4j:slf4j-api:${slf4jVersion}"
+    compile "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    compile "com.squareup.retrofit2:converter-jackson:$retrofitVersion"
+
+    testCompile 'org.springframework.boot:spring-boot-starter-test'
+    testCompile 'org.codehaus.groovy:groovy-all:2.4.12'
+    testCompile 'org.spockframework:spock-core:1.1-groovy-2.4'
+    testCompile 'org.spockframework:spock-spring:1.1-groovy-2.4'
+}
+
+compileJava {
+    options.compilerArgs << "-Xlint:unchecked"
+    options.annotationProcessorPath = configurations.apt
+}
